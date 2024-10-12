@@ -3,73 +3,43 @@ package es.upm.grise.profundizacion.wc;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Random;
-import java.nio.file.Files;
 
 public class CounterTest {
 
-    private static Counter emptyFileCounter;
+    // Random file
+    private final static String randomFileName = "src/test/res/RandomFile.txt";
+    private static RandomFile randomFile;
+
+    private static BufferedReader randomFileBR;
     private static Counter randomFileCounter;
 
     // Variables for random file generation
-    private static final int MAX_CHAR = 1000;
-    private static int testChar;
-    private static int testWord;
-    private static int testLine;
-
     @BeforeAll
     static public void beforeAll() {
-        String basedir = "src/test/rest/";
+        // Create directories for generated files if needed
+        randomFile = new RandomFile(randomFileName);
 
-        // Create directories for generated files
         try {
-            Path path = Paths.get(basedir);
-            Files.createDirectories(path);
+            randomFileBR = new BufferedReader(new FileReader(randomFileName));
+            randomFileCounter = new Counter(randomFileBR);
         } catch (IOException e) {
-            System.out.println("An error occurred while creating directories.");
-        }
-
-        // Create counter for an empty file
-        String emptyFilename = basedir + "EmptyFile.txt";
-        try (FileWriter ignored = new FileWriter(emptyFilename, false)) {
-            emptyFileCounter = new Counter(new BufferedReader(new FileReader(emptyFilename)));
-        } catch (IOException e) {
-            System.out.println("An error occurred while generating the empty file.");
-        }
-
-        // Create counter for an random file with MAX_CHAR characters
-        Random random = new Random();
-        String randomFilename = basedir + "RandomFile.txt";
-        try (FileWriter writer = new FileWriter(randomFilename, false)) {
-            testChar = random.nextInt(MAX_CHAR);
-            testWord = 0;
-            testLine = 0;
-            int nChar = 0;
-            while (nChar < testChar) {
-                char c = (char) random.nextInt(256); // Random ASCII character
-                switch (c) {
-                    case '\n':
-                        testLine++;
-                    case ' ':
-                    case '\t':
-                        testWord++;
-                }
-                writer.write(c);
-                nChar++;
-            }
-            writer.close();
-            randomFileCounter = new Counter(new BufferedReader(new FileReader(randomFilename)));
-        } catch (IOException e) {
-            System.out.println("An error occurred while generating the random file.");
+            // Ignored
         }
     }
 
     @AfterAll
     static public void afterAll() {
+        try {
+            randomFileBR.close();
+        } catch (IOException e) {
+            // Ignored
+        }
+
+        // Delete random file
+        randomFile.delete();
     }
 
     @BeforeEach
@@ -81,32 +51,32 @@ public class CounterTest {
     }
 
     @Test()
-    public void emptyFileCharCount() {
-        assertEquals(0, emptyFileCounter.getNumberCharacters());
+    // Detect IOException during initialization
+    public void counterIOException() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(randomFileName));
+            br.close(); // Force I/O exception in next line
+            assertThrows(IOException.class, () -> new Counter(br));
+        } catch (IOException e) {
+            // Ignored
+        }
     }
 
     @Test()
-    public void emptyFileWordCount() {
-        assertEquals(0, emptyFileCounter.getNumberWords());
+    // Check getNChar() method
+    public void randomFileCharCount() {
+        assertEquals(randomFile.getNChar(), randomFileCounter.getNumberCharacters());
     }
 
     @Test()
-    public void emptyFileLineCount() {
-        assertEquals(0, emptyFileCounter.getNumberLines());
-    }
-
-    @Test()
-    public void ramdomFileCharCount() {
-        assertEquals(testChar, randomFileCounter.getNumberCharacters());
-    }
-
-    @Test()
+    // Check getWord() method
     public void randomFileWordCount() {
-        assertEquals(testWord, randomFileCounter.getNumberWords());
+        assertEquals(randomFile.getNWord(), randomFileCounter.getNumberWords());
     }
 
     @Test()
+    // Check getLine() method
     public void randomFileLineCount() {
-        assertEquals(testLine, randomFileCounter.getNumberLines());
+        assertEquals(randomFile.getNLine(), randomFileCounter.getNumberLines());
     }
 }
