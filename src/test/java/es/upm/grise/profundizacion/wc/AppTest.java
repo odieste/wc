@@ -44,7 +44,11 @@ public class AppTest {
      */
     @Test
     public void llamadaSinParametros() {
-       fail();
+        String [] args = {};
+        App.main(args);
+
+        String expectedOutput = "Usage: wc [-clw file]";
+        assertEquals(expectedOutput, outputStream.toString().trim());
     }
 
     /**
