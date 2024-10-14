@@ -93,7 +93,11 @@ public class AppTest {
      */
     @Test
     public void comandosSinGuión() {
-        fail();
+        String [] args = {"c", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "The commands do not start with -";
+        assertEquals(expectedOutput, outputStream.toString().trim());
     }
 
     /**
