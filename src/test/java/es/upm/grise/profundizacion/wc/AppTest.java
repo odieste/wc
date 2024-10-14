@@ -48,7 +48,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "Usage: wc [-clw file]";
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message message if no parameters are passed");
     }
 
     /**
@@ -62,7 +62,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "Wrong arguments!";
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the number of parameters is different from 2");
     }
 
     /**
@@ -75,7 +75,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "Cannot find file: " + args[1];
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the file is not found");
     }
 
     /**
@@ -97,7 +97,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "The commands do not start with -";
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the commands do not start with -");
     }
 
     /**
