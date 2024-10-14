@@ -106,7 +106,11 @@ public class AppTest {
      */
     @Test
     public void comandosNoValidos() {
-        fail();
+        String [] args = {"-a", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "Unrecognized command: " + args[0].charAt(1);
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the command passed is not a valid command, if it is not c, l, w");
     }
 
     /**
