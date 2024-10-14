@@ -58,7 +58,11 @@ public class AppTest {
      */
     @Test
     public void llamadaConMasDeDosParametros() {
-        fail();
+        String [] args = {"-c", "file", "extra"};
+        App.main(args);
+
+        String expectedOutput = "Wrong arguments!";
+        assertEquals(expectedOutput, outputStream.toString().trim());
     }
 
     /**
