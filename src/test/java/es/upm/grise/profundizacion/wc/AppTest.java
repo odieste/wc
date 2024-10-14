@@ -71,7 +71,11 @@ public class AppTest {
      */
     @Test
     public void archivoNoEncontrado() {
-        fail();
+        String [] args = {"-c", "file"};
+        App.main(args);
+
+        String expectedOutput = "Cannot find file: " + args[1];
+        assertEquals(expectedOutput, outputStream.toString().trim());
     }
 
     /**
