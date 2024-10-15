@@ -48,7 +48,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "Usage: wc [-clw file]";
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message message if no parameters are passed");
     }
 
     /**
@@ -62,7 +62,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "Wrong arguments!";
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the number of parameters is different from 2");
     }
 
     /**
@@ -75,7 +75,7 @@ public class AppTest {
         App.main(args);
 
         String expectedOutput = "Cannot find file: " + args[1];
-        assertEquals(expectedOutput, outputStream.toString().trim());
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the file is not found");
     }
 
     /**
@@ -93,7 +93,11 @@ public class AppTest {
      */
     @Test
     public void comandosSinGuión() {
-        fail();
+        String [] args = {"c", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "The commands do not start with -";
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the commands do not start with -");
     }
 
     /**
@@ -102,7 +106,11 @@ public class AppTest {
      */
     @Test
     public void comandosNoValidos() {
-        fail();
+        String [] args = {"-a", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "Unrecognized command: " + args[0].charAt(1);
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints an error message if the command passed is not a valid command, if it is not c, l, w");
     }
 
     /**
@@ -111,7 +119,13 @@ public class AppTest {
      */
     @Test
     public void contarCaracteres() {
-        fail();
+        String [] args = {"-c", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "8" + "\t" + args[1];
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of characters if the -c command is passed");
+
+
     }
 
     /**
@@ -120,7 +134,13 @@ public class AppTest {
      */
     @Test
     public void contarLineas() {
-        fail();
+        String [] args = {"-l", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "1" + "\t" + args[1];
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of lines if the -l command is passed");
+
+
     }
 
     /**
@@ -129,7 +149,13 @@ public class AppTest {
      */
     @Test
     public void contarPalabras() {
-        fail();
+        String [] args = {"-w", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput = "2" + "\t" + args[1];
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of words if the -w command is passed");
+
+
     }
 
     /**
@@ -139,6 +165,10 @@ public class AppTest {
      */
     @Test
     public void contarTodo() {
-        fail();
+        String [] args = {"-clw", "./test_file/test.txt"};
+        App.main(args);
+
+        String expectedOutput ="8" +"\t" + "1" +"\t" + "2" + "\t" + args[1];
+        assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of characters, lines and words if the -clw command is passed");
     }
 }
