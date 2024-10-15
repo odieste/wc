@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class App {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
         
 		// Without parameters, we print the function usage
