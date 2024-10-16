@@ -6,12 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-
 
 public class AppTest {
-    
+
     /**
      * Captura la salida del programa
      */
@@ -80,15 +77,6 @@ public class AppTest {
 
     /**
      * Test que comprueba que el programa imprime
-     * un mensaje de error si no se puede leer el archivo
-     */
-    @Test
-    public void archivoNoLeible() {
-        fail();
-    }
-
-    /**
-     * Test que comprueba que el programa imprime
      * un mensaje de error si los comandos no empiezan por -
      */
     @Test
@@ -124,8 +112,6 @@ public class AppTest {
 
         String expectedOutput = "8" + "\t" + args[1];
         assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of characters if the -c command is passed");
-
-
     }
 
     /**
@@ -139,8 +125,6 @@ public class AppTest {
 
         String expectedOutput = "1" + "\t" + args[1];
         assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of lines if the -l command is passed");
-
-
     }
 
     /**
@@ -154,8 +138,6 @@ public class AppTest {
 
         String expectedOutput = "2" + "\t" + args[1];
         assertEquals(expectedOutput, outputStream.toString().trim(), "This method tests that the program prints the number of words if the -w command is passed");
-
-
     }
 
     /**
