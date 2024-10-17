@@ -12,26 +12,38 @@ public class Counter {
 	public Counter(BufferedReader br) throws IOException {
 
 	    int character = br.read();
+	    boolean insideWord = false;
+	    boolean hasCharacters = false;  // Flag to check if we've read any characters
 
 	    while (character != -1) {
-	    	// One more character
-	    	numberCharacters++;
-	    	
-	    	// Check if a separator has been found, which means a word
-	    	// has been detected
-	    	if(character == ' ' || character == '\t' || character == '\n') {
-	    		numberWords++;
-	    	}
-	    	
-	    	// Check newline to count lines
-	    	if(character == '\n') {
-	    		numberLines++;
-	    	}
-	    	
-	    	character = br.read();
+	        hasCharacters = true;
+	        numberCharacters++;
+
+	        if(character == ' ' || character == '\t' || character == '\n') {
+	            if (insideWord) {
+	                numberWords++;
+	                insideWord = false;
+	            }
+	        } else {
+	            insideWord = true;
+	        }
+
+	        if(character == '\n') {
+	            numberLines++;
+	        }
+
+	        character = br.read();
 	    }
-		
+
+	    if (insideWord) {
+	        numberWords++;
+	    }
+
+	    if (hasCharacters && numberLines == 0) {
+	        numberLines = 1;
+	    }
 	}
+
 
 	public int getNumberCharacters() {
 		return numberCharacters;
