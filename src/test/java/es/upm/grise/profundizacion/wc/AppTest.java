@@ -75,6 +75,13 @@ public class AppTest {
         App.main(new String[]{"-clw", tempFile.getAbsolutePath()});
         assertEquals("32\t2\t7\t" + tempFile.getAbsolutePath(), outputStream.toString().trim());
     }
+    
+    @Test
+    public void noPasoArgumentos() throws IOException {
+        File tempFile = crearArchivoTemporalCon("Hello World\nThis is a test file\n");
+    	App.main(new String[] {"test", tempFile.getAbsolutePath() } );
+    	assertEquals("The commands do not start with -", outputStream.toString().trim());
+    }
 
     private File crearArchivoTemporalCon(String content) throws IOException {
         File tempFile = File.createTempFile("testFile", ".txt");
