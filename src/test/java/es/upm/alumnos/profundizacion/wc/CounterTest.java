@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +18,7 @@ import es.upm.grise.profundizacion.wc.Counter;
 
 public class CounterTest {
 
-    private static final String TEST_TEXT = " hello, there\n are \t\n\t this is a sample text\n";
+    private static final String TEST_TEXT = " \thello\n\n\n this is a test text\n\t";
 
     static StringReader stringReader = new StringReader(TEST_TEXT);
     static BufferedReader bReader = new BufferedReader(stringReader);
@@ -29,12 +31,18 @@ public class CounterTest {
 
     @Test
     public void getNumberWordsTest() throws IOException {
-        assert counter.getNumberWords() == TEST_TEXT.trim().split("\\s+").length;
+        if ( ! TEST_TEXT.isBlank())
+            assert counter.getNumberWords() == TEST_TEXT.trim().split("\\s+").length;
+        else
+            assert counter.getNumberWords() == 0;
     }
 
     @Test
     public void getNumberLines() throws IOException {
-        assert counter.getNumberLines() == TEST_TEXT.split("\r\n|\r|\n").length;
+        Matcher m = Pattern.compile("\r\n|\r|\n").matcher(TEST_TEXT);
+        int lines = 0;
+        while (m.find()){lines ++;}
+        assert counter.getNumberLines() == lines;
     }
 
     @BeforeAll
