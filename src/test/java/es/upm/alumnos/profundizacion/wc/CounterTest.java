@@ -7,56 +7,63 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import es.upm.grise.profundizacion.wc.Counter;
 
 public class CounterTest {
 
-    private static final String TEST_TEXT = " \thello\n\n\n this is a test text\n\t";
+    private static final String TEST_TEXT = " \thello\n\n\n this is a test text\n\t", BLANK = " ";
 
-    static StringReader stringReader = new StringReader(TEST_TEXT);
-    static BufferedReader bReader = new BufferedReader(stringReader);
-    static Counter counter;
+    static BufferedReader latestBufferedReader;
 
-    @Test
-    public void getNumberCharactersTest() throws IOException {
-        assert counter.getNumberCharacters() == TEST_TEXT.length();
+    private static Counter createCounter(String testedString) throws IOException {
+        latestBufferedReader = new BufferedReader(new StringReader(testedString));
+        return new Counter(latestBufferedReader);
     }
 
-    @Test
-    public void getNumberWordsTest() throws IOException {
-        if ( ! TEST_TEXT.isBlank())
-            assert counter.getNumberWords() == TEST_TEXT.trim().split("\\s+").length;
+    @ParameterizedTest
+    @EmptySource
+    @ValueSource(strings = {TEST_TEXT, BLANK})
+    public void getNumberCharactersTest(String testedString) throws IOException {
+        Counter counter = createCounter(testedString);
+        assertEquals(counter.getNumberCharacters(), testedString.length());
+    }
+
+    @ParameterizedTest
+    @EmptySource
+    @ValueSource(strings = {TEST_TEXT, BLANK})
+    public void getNumberWordsTest(String testedString) throws IOException {
+        Counter counter = createCounter(testedString);
+        if ( ! testedString.isBlank())
+            assertEquals(counter.getNumberWords(), testedString.trim().split("\\s+").length);
         else
-            assert counter.getNumberWords() == 0;
+            assertEquals(counter.getNumberWords(), 0);
     }
 
-    @Test
-    public void getNumberLines() throws IOException {
-        Matcher m = Pattern.compile("\r\n|\r|\n").matcher(TEST_TEXT);
+    @ParameterizedTest 
+    @EmptySource
+    @ValueSource(strings = {TEST_TEXT, BLANK})
+    public void getNumberLines(String testedString) throws IOException {
+        Counter counter = createCounter(testedString);
+        Matcher m = Pattern.compile("\r\n|\r|\n").matcher(testedString);
         int lines = 0;
         while (m.find()){lines ++;}
-        assert counter.getNumberLines() == lines;
+        assertEquals(counter.getNumberLines(), lines);
     }
 
-    @BeforeAll
-    public static void markBuffer() throws IOException {
-        bReader.mark(TEST_TEXT.length() + 1);
-        counter = new Counter(bReader);
-    }
-
-    @BeforeEach
-    public void resetBuffer() throws IOException { bReader.reset(); }
-
-    @AfterAll
-    public static void closeBufferedReader() throws IOException {
-        bReader.close();
-        stringReader.close();
+    @AfterEach
+    public void closeBufferedReader() throws IOException {
+        latestBufferedReader.close();
     }
 }
