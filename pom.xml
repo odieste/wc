@@ -23,6 +23,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -40,8 +41,13 @@
       <version>2.1.5</version>
       <scope>test</scope>
 	</dependency>
-
-    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter-params</artifactId> <version>5.9.2</version> <scope>test</scope> </dependency>
   </dependencies>
 
 </project>

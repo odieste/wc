@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: CounterTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.088 s <<< FAILURE! -- in CounterTest
+CounterTest.testWordCount -- Time elapsed: 0.073 s <<< FAILURE!
+org.junit.ComparisonFailure: 
+expected:<	[5	C:\Users\izan3\AppData\Local\Temp\test7954128344138145938.txt]
+> but was:<	[6	C:\Users\izan3\AppData\Local\Temp\test7954128344138145938.txt]
+>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at CounterTest.testWordCount(CounterTest.java:39)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+
