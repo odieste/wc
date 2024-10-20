@@ -25,18 +25,21 @@ public class AppTest {
     @Test
     public void testNoArguments() {
         App.main(new String[]{});
-        assertEquals("Usage: wc [-clw file]".trim(), outContent.toString().trim());
+        String expedString = "Usage: wc [-clw file]";
+        assertEquals(expedString, outContent.toString().trim(), "No arguments message is" + expedString + " but returned " + outContent.toString().trim());
     }
 
     @Test
     public void testWrongArguments() {
         App.main(new String[]{"-c", "file1", "file2"});
-        assertEquals("Wrong arguments!".trim(), outContent.toString().trim());
+        String expedString = "Wrong arguments!";
+        assertEquals(expedString, outContent.toString().trim(), "Wrong arguments message is" + expedString + " but returned " + outContent.toString().trim());
     }
 
     @Test
     public void testFileNotFound() {
         App.main(new String[]{"-c", "nonexistent.txt"});
-        assertEquals("Cannot find file: nonexistent.txt".trim(), outContent.toString().trim());
+        String expedString = "Cannot find file: nonexistent.txt";
+        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
     }
 }
