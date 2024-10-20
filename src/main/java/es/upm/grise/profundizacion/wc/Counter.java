@@ -26,6 +26,10 @@ public class Counter {
 	    	prev = character;
 	    	character = br.read();
 	    }
+	    
+	    if (prev!=' ' && prev!='\t' && prev!='\n') {
+			numberWords++;
+	    }
 		
 	}
 
