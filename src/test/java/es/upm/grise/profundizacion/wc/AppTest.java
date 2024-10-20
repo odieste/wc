@@ -53,10 +53,7 @@ public class AppTest {
     @Test
     public void testCCommand() throws IOException {
 
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
-        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
-        String filePathString = tempFile.toPath().toString();
+        String filePathString = getTempFileString("Hello World\nThis is a test file.\n");
 
         App.main(new String[] { "-c", filePathString });
         String expedString = "33" + "\t" + filePathString;
@@ -67,10 +64,7 @@ public class AppTest {
     @Test
     public void testLCommand() throws IOException {
 
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
-        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
-        String filePathString = tempFile.toPath().toString();
+        String filePathString = getTempFileString("Hello World\nThis is a test file.\n");
 
         App.main(new String[] { "-l", filePathString });
         String expedString = "2" + "\t" + filePathString;
@@ -81,10 +75,7 @@ public class AppTest {
     @Test
     public void testWCommand() throws IOException {
 
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
-        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
-        String filePathString = tempFile.toPath().toString();
+        String filePathString = getTempFileString("Hello World\nThis is a test file.\n");
 
         App.main(new String[] { "-w", filePathString });
         String expedString = "7" + "\t" + filePathString;
@@ -95,14 +86,18 @@ public class AppTest {
     @Test
     public void testCommands() throws IOException {
 
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
-        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
-        String filePathString = tempFile.toPath().toString();
+        String filePathString = getTempFileString("Hello World\nThis is a test file.\n");
 
         App.main(new String[] { "-clw", filePathString });
         String expedString = "33\t2\t7" + "\t" + filePathString;
         assertEquals(expedString, outContent.toString().trim(),
                 "Counts are " + expedString + " but returned " + outContent.toString().trim());
+    }
+
+    private String getTempFileString(String content) throws IOException {
+        File tempFile = File.createTempFile("testFile", ".txt");
+        tempFile.deleteOnExit();
+        Files.write(tempFile.toPath(), content.getBytes());
+        return tempFile.toPath().toString();
     }
 }
