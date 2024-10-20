@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 
 import es.upm.grise.profundizacion.wc.App;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
@@ -17,7 +19,28 @@ import uk.org.webcompere.systemstubs.stream.SystemOut;
 
 @ExtendWith(SystemStubsExtension.class)
 public class AppTest {
-
+    
+	@TempDir
+    private static File dir;
+    private static File emptyFile;
+    private static File notAllowed;
+    private static File quotes;
+    
+    @BeforeAll
+    public static void initFiles() throws IOException {
+        emptyFile = new File(dir, "emptyFile.txt");
+        emptyFile.createNewFile();
+        notAllowed = new File(dir, "you_shall_not_pass.txt");
+        notAllowed.createNewFile();
+        notAllowed.setReadable(false);
+        quotes = new File(dir, "quotes.txt");
+        Files.write(quotes.toPath(),
+                List.of("Without music, life would be a mistake. - Nietzsche",
+                        "There's no point in being grown up if you can't act childish sometimes. - 4th Doctor",
+                        "Forget the past. No one becomes successful in the past. - Anonymous")
+                );
+    }
+    
     private static void callApp(String... args) {
         App.main(args);
     }
@@ -53,31 +76,35 @@ public class AppTest {
         callApp("-w", filename);
         assertLinesMatch(List.of("Cannot find file.*"), getOutLines(),
                 "The program should report if the file cannot be found!");
-        assertLinesMatch(List.of(".*" + filename), getOutLines(), "The program should report the name of the file!");
+        assertLinesMatch(List.of(".*" + Pattern.quote(filename)), getOutLines(), "The program should report the name of the file!");
     }
 
     @Test
-    public void testAnEmptyFile() throws IOException {
-        File emptyFile = File.createTempFile("empty", null);
-        emptyFile.deleteOnExit();  
-
-        Path normalizedPath = emptyFile.toPath();
-        String normalizedFilename = normalizedPath.toString();
-
-        callApp("-cwl", normalizedFilename);
-
-        assertAll(
-            () -> assertLinesMatch(
-                List.of("^.*0.*0.*0.*"), 
-                getOutLines(),
-                "The program should report zeros for all counts on an empty file!"
-            ),
-            () -> assertLinesMatch(
-                List.of(".*" + Pattern.quote(normalizedFilename)), 
-                getOutLines(),
-                "The program should report the name of the file that had been processed!"
-            )
-        );
+    public void testPermissionsOnAFile() {
+        final String filename = notAllowed.getAbsolutePath();
+        callApp("-cwl", filename);
+        assertLinesMatch(List.of("Cannot find file.*"), getOutLines(),
+                "The program should report if the file cannot be accesible!");
+        assertLinesMatch(List.of(".*" + Pattern.quote(filename)), getOutLines(), "The program should report the name of the file!");
     }
 
+    @Test
+    public void testAnEmptyFile() {
+        final String filename = emptyFile.getAbsolutePath();
+        callApp("-cwl", filename);
+        assertLinesMatch(List.of("\\s\\d+\\s\\d+\\s\\d+.*"), getOutLines(),
+                "The program should report as many counts requested!");
+        assertLinesMatch(List.of(".*" + Pattern.quote(filename)), getOutLines(),
+                "The program should report the name of the file that had been processed!");
+    }
+
+    @Test
+    public void testAWrittenFileTwoOptions() {
+        final String filename = quotes.getAbsolutePath();
+        callApp("-cl", filename);
+        assertLinesMatch(List.of("\\s\\d+\\s\\d+.*"), getOutLines(),
+                "The program should report as many counts requested!");
+        assertLinesMatch(List.of(".*" + Pattern.quote(filename)), getOutLines(),
+                "The program should report the name of the file that had been processed!");
+    }
 }
