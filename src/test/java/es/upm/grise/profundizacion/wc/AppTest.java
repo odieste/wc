@@ -42,4 +42,33 @@ public class AppTest {
         String expedString = "Cannot find file: nonexistent.txt";
         assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
     }
+    
+    
+    @Test
+    public void testCCommand() {
+        App.main(new String[]{"-c", "example.txt"});
+        String expedString = "";
+        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    }
+    
+    @Test
+    public void testLCommand() {
+        App.main(new String[]{"-l", "example.txt"});
+        String expedString = "";
+        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    }
+    
+    @Test
+    public void testWCommand() {
+        App.main(new String[]{"-w", "example.txt"});
+        String expedString = "";
+        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    }
+    
+    @Test
+    public void testCommands() {
+        App.main(new String[]{"-clw", "example.txt"});
+        String expedString = "";
+        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    }
 }
