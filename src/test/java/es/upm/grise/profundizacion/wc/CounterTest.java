@@ -35,6 +35,10 @@ public class CounterTest {
     private static final int SEPARATORS_LINE_COUNT = 2;
 
     final BufferedReader helloWorldBufferedReader = new BufferedReader(new StringReader(HELLO_WORLD));
+    final BufferedReader emptyBufferedReader = new BufferedReader(new StringReader(EMPTY));
+    final BufferedReader oneWordBufferedReader = new BufferedReader(new StringReader(ONE_WORD));
+    final BufferedReader multipleLinesBufferedReader = new BufferedReader(new StringReader(MULTIPLE_LINES));    
+    final BufferedReader separatorsBufferedReader = new BufferedReader(new StringReader(SEPARATORS));
 
     @Test
     public void testNumberCharacters() throws IOException {
@@ -56,87 +60,75 @@ public class CounterTest {
     
     @Test
     public void testNumCharacterEmtpyString() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(EMPTY));
-        int actualCharCount = new Counter(bufferedReader).getNumberCharacters();
+        int actualCharCount = new Counter(emptyBufferedReader).getNumberCharacters();
         assertEquals(EMPTY_CHAR_COUNT, actualCharCount, "Number of characters should be " + EMPTY_CHAR_COUNT + " but returned " + actualCharCount);
     }
     
     @Test
     public void testNumWordEmtpyString() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(EMPTY));
-        int actualWordCount = new Counter(bufferedReader).getNumberWords();
+        int actualWordCount = new Counter(emptyBufferedReader).getNumberWords();
         assertEquals(EMPTY_WORD_COUNT, actualWordCount, "Number of words should be " + EMPTY_WORD_COUNT + " but returned " + actualWordCount);
     }
     
     @Test
     public void testNumLineEmtpyString() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(EMPTY));
-        int actualLineCount = new Counter(bufferedReader).getNumberLines();
+        int actualLineCount = new Counter(emptyBufferedReader).getNumberLines();
         assertEquals(EMPTY_LINE_COUNT, actualLineCount, "Number of lines should be " + EMPTY_LINE_COUNT + " but returned " + actualLineCount);
     }
     
     
     @Test
     public void testNumCharacterOneWord() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(ONE_WORD));
-        int actualCharCount = new Counter(bufferedReader).getNumberCharacters();
+        int actualCharCount = new Counter(oneWordBufferedReader).getNumberCharacters();
         assertEquals(ONE_WORD_CHAR_COUNT, actualCharCount, "Number of characters should be " + ONE_WORD_CHAR_COUNT + " but returned " + actualCharCount);
     }
     
     @Test
     public void testNumWordOneWord() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(ONE_WORD));
-        int actualWordCount = new Counter(bufferedReader).getNumberWords();
+        int actualWordCount = new Counter(oneWordBufferedReader).getNumberWords();
         assertEquals(ONE_WORD_WORD_COUNT, actualWordCount, "Number of words should be " + ONE_WORD_WORD_COUNT + " but returned " + actualWordCount);
     }
     
     @Test
     public void testNumLineOneWord() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(ONE_WORD));
-        int actualLineCount = new Counter(bufferedReader).getNumberLines();
+        int actualLineCount = new Counter(oneWordBufferedReader).getNumberLines();
         assertEquals(ONE_WORD_LINE_COUNT, actualLineCount, "Number of lines should be " + ONE_WORD_LINE_COUNT + " but returned " + actualLineCount);
     }
     
 
     @Test
     public void testNumCharacterMultipleLines() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(MULTIPLE_LINES));
-        int actualCharCount = new Counter(bufferedReader).getNumberCharacters();
+        int actualCharCount = new Counter(multipleLinesBufferedReader).getNumberCharacters();
         assertEquals(MULTIPLE_LINES_CHAR_COUNT, actualCharCount, "Number of characters should be " + MULTIPLE_LINES_CHAR_COUNT + " but returned " + actualCharCount);
     }
     
     @Test
     public void testNumWordMultipleLines() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(MULTIPLE_LINES));
-        int actualWordCount = new Counter(bufferedReader).getNumberWords();
+        int actualWordCount = new Counter(multipleLinesBufferedReader).getNumberWords();
         assertEquals(MULTIPLE_LINES_WORD_COUNT, actualWordCount, "Number of words should be " + MULTIPLE_LINES_WORD_COUNT + " but returned " + actualWordCount);
     }
     
     @Test
     public void testNumLineMultipleLines() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(MULTIPLE_LINES));
-        int actualLineCount = new Counter(bufferedReader).getNumberLines();
+        int actualLineCount = new Counter(multipleLinesBufferedReader).getNumberLines();
         assertEquals(MULTIPLE_LINES_LINE_COUNT, actualLineCount, "Number of lines should be " + MULTIPLE_LINES_LINE_COUNT + " but returned " + actualLineCount);
     }
     
     @Test
     public void testNumCharacterSeparators() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(SEPARATORS));
-        int actualCharCount = new Counter(bufferedReader).getNumberCharacters();
+        int actualCharCount = new Counter(separatorsBufferedReader).getNumberCharacters();
         assertEquals(SEPARATORS_CHAR_COUNT, actualCharCount, "Number of characters should be " + SEPARATORS_CHAR_COUNT + " but returned " + actualCharCount);
     }
     
     @Test
     public void testNumWordSeparators() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(SEPARATORS));
-        int actualWordCount = new Counter(bufferedReader).getNumberWords();
+        int actualWordCount = new Counter(separatorsBufferedReader).getNumberWords();
         assertEquals(SEPARATORS_WORD_COUNT, actualWordCount, "Number of words should be " + SEPARATORS_WORD_COUNT + " but returned " + actualWordCount);
     }
     
     @Test
     public void testNumLineSeparators() throws IOException {
-    	BufferedReader bufferedReader = new BufferedReader(new StringReader(SEPARATORS));
-        int actualLineCount = new Counter(bufferedReader).getNumberLines();
+        int actualLineCount = new Counter(separatorsBufferedReader).getNumberLines();
         assertEquals(SEPARATORS_LINE_COUNT, actualLineCount, "Number of lines should be " + SEPARATORS_LINE_COUNT + " but returned " + actualLineCount);
     }
 }
