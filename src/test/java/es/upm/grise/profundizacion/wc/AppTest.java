@@ -1,24 +1,33 @@
 package es.upm.grise.profundizacion.wc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class AppTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
+    @TempDir
+    File tempDir;
+
     @BeforeEach
-    public void setUpStreams() {
+    public void setUpStreams(){
         System.setOut(new PrintStream(outContent));
     }
 
     @AfterEach
-    public void restoreStreams() {
+    public void restoreStreams(){
         System.setOut(originalOut);
     }
 
@@ -42,33 +51,57 @@ public class AppTest {
         String expedString = "Cannot find file: nonexistent.txt";
         assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
     }
-    
-    
+
     @Test
-    public void testCCommand() {
-        App.main(new String[]{"-c", "example.txt"});
-        String expedString = "";
-        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    public void testCCommand() throws IOException {
+        assertTrue(tempDir.isDirectory());
+
+        File tempFile = new File(tempDir, "temp.txt");
+        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
+        String filePathString = tempFile.toPath().toString();
+
+        App.main(new String[]{"-c", filePathString});
+        String expedString = "33" + "\t" + filePathString;
+        String resulString = outContent.toString().trim();
+        assertEquals(expedString, resulString, "Character count is " + expedString + " but returned " + resulString);
     }
-    
+
     @Test
-    public void testLCommand() {
-        App.main(new String[]{"-l", "example.txt"});
-        String expedString = "";
-        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    public void testLCommand() throws IOException {
+        assertTrue(tempDir.isDirectory());
+
+        File tempFile = new File(tempDir, "temp.txt");
+        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
+        String filePathString = tempFile.toPath().toString();
+
+        App.main(new String[]{"-l", filePathString});
+        String expedString = "2" + "\t" + filePathString;
+        assertEquals(expedString, outContent.toString().trim(), "Line count is " + expedString + " but returned " + outContent.toString().trim());
     }
-    
+
     @Test
-    public void testWCommand() {
-        App.main(new String[]{"-w", "example.txt"});
-        String expedString = "";
-        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    public void testWCommand() throws IOException {
+        assertTrue(tempDir.isDirectory());
+
+        File tempFile = new File(tempDir, "temp.txt");
+        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
+        String filePathString = tempFile.toPath().toString();
+
+        App.main(new String[]{"-w", filePathString});
+        String expedString = "7" + "\t" + filePathString;
+        assertEquals(expedString, outContent.toString().trim(), "Word count is " + expedString + " but returned " + outContent.toString().trim());
     }
-    
+
     @Test
-    public void testCommands() {
-        App.main(new String[]{"-clw", "example.txt"});
-        String expedString = "";
-        assertEquals(expedString, outContent.toString().trim(), "File not found message is" + expedString + " but returned " + outContent.toString().trim());
+    public void testCommands() throws IOException {
+        assertTrue(tempDir.isDirectory());
+
+        File tempFile = new File(tempDir, "temp.txt");
+        Files.write(tempFile.toPath(), "Hello World\nThis is a test file.\n".getBytes());
+        String filePathString = tempFile.toPath().toString();
+
+        App.main(new String[]{"-clw", filePathString});
+        String expedString = "33\t2\t7" + "\t" + filePathString;
+        assertEquals(expedString, outContent.toString().trim(), "Counts are " + expedString + " but returned " + outContent.toString().trim());
     }
 }
