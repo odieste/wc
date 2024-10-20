@@ -38,7 +38,7 @@ public class CounterTest {
     @ValueSource(strings = {TEST_TEXT, BLANK, ONE_WORD, TWO_WORDS, GERMAN_WORDS, LINES, LINES1})
     public void getNumberCharactersTest(String testedString) throws IOException {
         Counter counter = createCounter(testedString);
-        assertEquals(testedString.length(), counter.getNumberCharacters(), "Not correct count of characters for input <"+testedString+">");
+        assertEquals(testedString.length(), counter.getNumberCharacters(), "Incorrectly counted nº of characters for input <"+testedString+">");
     }
 
     @ParameterizedTest
@@ -47,7 +47,7 @@ public class CounterTest {
     public void getNumberWordsTest(String testedString) throws IOException {
         Counter counter = createCounter(testedString);
         if ( ! testedString.isBlank())
-            assertEquals(testedString.trim().split("\\s+").length, counter.getNumberWords(), "Not correct count of words for input <"+testedString+">");
+            assertEquals(testedString.trim().split("\\s+").length, counter.getNumberWords(), "Incorrectly counted nº of words for input <"+testedString+">");
         else
             assertEquals(0, counter.getNumberWords());
     }
@@ -60,7 +60,7 @@ public class CounterTest {
         Matcher m = Pattern.compile("\r\n|\r|\n").matcher(testedString);
         int lines = 0;
         while (m.find()){lines ++;}
-        assertEquals(lines, counter.getNumberLines(), "Not correct count of words for lines <"+testedString+">");
+        assertEquals(lines, counter.getNumberLines(), "Incorrectly counted nº of lines for<"+testedString+">");
     }
 
     @AfterEach

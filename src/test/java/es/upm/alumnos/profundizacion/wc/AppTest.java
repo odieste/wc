@@ -65,19 +65,19 @@ public class AppTest {
     @Test
     public void testNoArgs() {
         callApp();
-        assertLinesMatch(List.of("Usage: wc [-clw file]"), getOutLines(), "The program should print how to use it!");
+        assertLinesMatch(List.of("Usage: wc [-clw file]"), getOutLines(), "The program should print usage instructions!");
     }
 
     @Test
     public void testOneArg() {
         callApp("-w");
-        assertLinesMatch(List.of("Wrong arguments!"), getOutLines(), "The program only work with 2 arguments!");
+        assertLinesMatch(List.of("Wrong arguments!"), getOutLines(), "The program should admit exactly 2 arguments!");
     }
 
     @Test
     public void testMoreThanTwoArgs() {
         callApp("-w", "file.txt", "other.txt");
-        assertLinesMatch(List.of("Wrong arguments!"), getOutLines(), "The program only work with 2 arguments!");
+        assertLinesMatch(List.of("Wrong arguments!"), getOutLines(), "The program should admit exactly 2 arguments!");
     }
 
     @Test
