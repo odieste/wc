@@ -6,7 +6,6 @@
   <groupId>es.upm.grise.profundizacion</groupId>
   <artifactId>wc-complete</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-
   <name>wc-private</name>
 
   <properties>
@@ -52,21 +51,20 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
-	  
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-jupiter</artifactId>
-      <version>2.1.5</version>
+      <version>2.1.7</version>
       <scope>test</scope>
-	</dependency>
+    </dependency>
 
-    
   </dependencies>
 
 </project>

@@ -3,65 +3,72 @@ package es.upm.grise.profundizacion.wc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.StringReader;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
+
+@org.junit.jupiter.api.extension.ExtendWith(SystemStubsExtension.class)
 public class CounterTest {
 
-    private static final String[] fn = {"test_file/a.txt", "test_file/b.txt", "test_file/c.txt"};
-    private static Counter[] counter = new Counter[fn.length];
-    private static BufferedReader[] br = new BufferedReader[fn.length];
+    private static EnvironmentVariables ev;
 
     @BeforeAll
-    public static void set() throws IOException {
-        br[0] = new BufferedReader(new FileReader(fn[0]));
-        counter[0] = new Counter(br[0]);
-
-        br[1] = new BufferedReader(new FileReader(fn[1]));
-        counter[1] = new Counter(br[1]);
-
-        br[2] = new BufferedReader(new FileReader(fn[2]));
-        counter[2] = new Counter(br[2]);
-    }
-
-    @AfterAll
-    public static void out() throws IOException {
-        br[0].close();
-        br[1].close();
-        br[2].close();
+    public static void setUp() throws Exception {
+        ev = new EnvironmentVariables();
     }
 
     @Test
-    public void test_getNumberCharacters() {
-        int[] e = {210, 229, 774};
-        int[] a = {counter[0].getNumberCharacters(), counter[1].getNumberCharacters(), counter[2].getNumberCharacters()};
+    public void test_file1() throws Exception {
+        ev
+        .and("file1","We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.\n")
+        .execute(() -> {
+            String fileContent = System.getenv("file1");
+            BufferedReader reader = new BufferedReader(new StringReader(fileContent));
+            Counter counter = new Counter(reader);
 
-        assertEquals(e[0], a[0], "test_getNumberCharacters : " + fn[0]);
-        assertEquals(e[1], a[1], "test_getNumberCharacters : " + fn[1]);
-        assertEquals(e[2], a[2], "test_getNumberCharacters : " + fn[2]);
+            assertEquals(210, counter.getNumberCharacters(), "Number of characters mismatch.");
+            assertEquals(1, counter.getNumberLines(), "Number of lines mismatch.");
+            assertEquals(35, counter.getNumberWords(), "Number of words mismatch.");
+
+            reader.close();
+        });
     }
 
     @Test
-    public void test_getNumberLines() {
-        int[] e = {1, 2, 24};
-        int[] a = {counter[0].getNumberLines(), counter[1].getNumberLines(), counter[2].getNumberLines()};
+    public void test_file2() throws Exception {
+        ev
+        .and("file2","I expect to pass through this world but once; any good thing therefore that I can do, or any kindness that I can show\nto any fellow-creature, let me do it now; let me not defer or neglect it, for I shall not pass this way again.\n")
+        .execute(() -> {
+            String fileContent = System.getenv("file2");
+            BufferedReader reader = new BufferedReader(new StringReader(fileContent));
+            Counter counter = new Counter(reader);
 
-        assertEquals(e[0], a[0], "test_getNumberLines : " + fn[0]);
-        assertEquals(e[1], a[1], "test_getNumberLines : " + fn[1]);
-        assertEquals(e[2], a[2], "test_getNumberLines : " + fn[2]);
+            assertEquals(229, counter.getNumberCharacters(), "Number of characters mismatch.");
+            assertEquals(2, counter.getNumberLines(), "Number of lines mismatch.");
+            assertEquals(47, counter.getNumberWords(), "Number of words mismatch.");
+
+            reader.close();
+        });
     }
 
     @Test
-    public void test_getNumberWords() {
-        int[] e = {35, 47, 143};
-        int[] a = {counter[0].getNumberWords(), counter[1].getNumberWords(), counter[2].getNumberWords()};
+    public void test_file3() throws Exception {
+        ev
+        .and("file3","Tiger! Tiger! burning bright\nIn the forests of the night,\nWhat immortal hand or eye\nCould frame thy fearful symmetry?\nIn what distant deeps or skies\nBurnt the fire of thine eyes?\nOn what wings dare he aspire?\nWhat the hand dare seize the fire?\nAnd what shoulder, and what art,\nCould twist the sinews of thy heart?\nAnd when thy heart began to beat,\nWhat dread hand? and what dread feet?\nWhat the hammer? what the chain?\nIn what furnace was thy brain?\nWhat the anvil? what dread grasp\nDare its deadly terrors clasp?\nWhen the stars threw down their spears,\nAnd watered heaven with their tears,\nDid he smile his work to see?\nDid he who made the Lamb make thee?\nTiger! Tiger! burning bright\nIn the forests of the night,\nWhat immortal hand or eye\nDare frame thy fearful symmetry?\n")
+        .execute(() -> {
+            String fileContent = System.getenv("file3");
+            BufferedReader reader = new BufferedReader(new StringReader(fileContent));
+            Counter counter = new Counter(reader);
 
-        assertEquals(e[0], a[0], "test_getNumberWords : " + fn[0]);
-        assertEquals(e[1], a[1], "test_getNumberWords : " + fn[1]);
-        assertEquals(e[2], a[2], "test_getNumberWords : " + fn[2]);
+            assertEquals(774, counter.getNumberCharacters(), "Number of characters mismatch.");
+            assertEquals(24, counter.getNumberLines(), "Number of lines mismatch.");
+            assertEquals(143, counter.getNumberWords(), "Number of words mismatch.");
+
+            reader.close();
+        });
     }
 }
