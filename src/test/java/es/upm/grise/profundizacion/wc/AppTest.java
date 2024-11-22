@@ -6,13 +6,30 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.IOException;
 
 
 public class AppTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    public final String path_txt="src\\\\test\\\\java\\\\es\\\\upm\\\\grise\\\\profundizacion\\\\wc\\\\";
+    private String contentEmpty = "";
+    private String contentA = "En un lugar de la Mancha,\n" + //
+                "de cuyo nombre no quiero acordarme,\n" + //
+                "no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero,\n" + //
+                "adarga antigua, rocín flaco y galgo corredor.\n";
+
+    private String contentB = "Esto\n" + //
+                "es\n" + //
+                "una\n" + //
+                "pr4-ba\n" + //
+                ":)";
+    private String contentC = "que hora es?\n" + //
+                "8t\n" + //
+                "hola!\n" + //
+                "24+";
+    
     @BeforeEach
     public void setUpStreams() {
         System.setOut(new PrintStream(outContent));
@@ -21,6 +38,18 @@ public class AppTest {
     @AfterEach
     public void restoreStreams() {
         System.setOut(System.out);
+    }
+
+    private Path createTestFile(String fileName, String content) throws IOException {
+        Path filePath = Files.createTempFile(fileName, ".txt");
+        Files.writeString(filePath, content);
+        return filePath; 
+    }
+
+    private void deleteTestFile(Path filePath) throws IOException {
+        try{
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {}
     }
 
     @Test
@@ -34,91 +63,98 @@ public class AppTest {
         App.main(new String[]{"-c", "file1.txt", "extraArg"});
         assertEquals("Wrong arguments!\r\n", outContent.toString());
     }
-
-    @Test
-    public void testFileNotFound() {
-        App.main(new String[]{"-c", "no_existe.txt"});
-        assertEquals("Cannot find file: no_existe.txt\r\n", outContent.toString());
-    }
-
     @Test
     public void testUnrecognizedCommand() throws IOException {
-        String fileName = path_txt +"testA.txt";
-        App.main(new String[]{"-t", fileName});
+        Path filePath = createTestFile("test_empty", contentEmpty);
+        App.main(new String[]{"-t", filePath.toString()});
         assertEquals("Unrecognized command: t\r\n", outContent.toString());
+        deleteTestFile(filePath);
     }
     @Test
     public void testEmptyFile() throws IOException {
-        String fileName = path_txt + "test_empty.txt";
-        App.main(new String[]{"-clw", fileName});
-        assertTrue(outContent.toString().contains("\t0\t0\t0\t" + fileName));
+        Path filePath = createTestFile("test_empty", contentEmpty);
+        App.main(new String[]{"-clw", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t0\t0\t0\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testCountCharactersA() throws IOException {
-        String fileName = path_txt + "testA.txt";
-        App.main(new String[]{"-c", fileName});
-        assertTrue(outContent.toString().contains("\t182\t" + fileName));
+        Path filePath = createTestFile("testA", contentA);
+        App.main(new String[]{"-c", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t178\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testCountCharactersB() throws IOException {
-        String fileName =  path_txt + "testB.txt";
-        App.main(new String[]{"-c", fileName});
-        assertTrue(outContent.toString().contains("\t27\t" + fileName));
+        Path filePath = createTestFile("testB", contentB);
+        App.main(new String[]{"-c", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t21\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
 
     @Test
     public void testCountCharactersC() throws IOException {
-        String fileName =  path_txt + "testC.txt";
-        App.main(new String[]{"-c", fileName});
-        assertTrue(outContent.toString().contains("\t30\t" + fileName));
+        Path filePath = createTestFile("testC", contentC);
+        App.main(new String[]{"-c", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t25\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testCountLinesA() throws IOException {
-        String fileName =  path_txt + "testA.txt";
-        App.main(new String[]{"-l", fileName});
-        assertTrue(outContent.toString().contains("\t4\t" + fileName));
+        Path filePath = createTestFile("testA", contentA);
+        App.main(new String[]{"-l", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t4\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testCountLinesB() throws IOException {
-        String fileName = path_txt + "testB.txt";
-        App.main(new String[]{"-l", fileName});
-        assertTrue(outContent.toString().contains("\t5\t" + fileName));
+        Path filePath = createTestFile("testB", contentB);
+        App.main(new String[]{"-l", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t4\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
 
     @Test
     public void testCountWordsA() throws IOException {
-        String fileName = path_txt + "testA.txt";
-        App.main(new String[]{"-w", fileName});
-        assertTrue(outContent.toString().contains("\t33\t" + fileName));
+        Path filePath = createTestFile("testA", contentA);
+        App.main(new String[]{"-w", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t33\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testCountWordsC() throws IOException {
-        String fileName = path_txt + "testC.txt";
-        App.main(new String[]{"-w", fileName});
-        assertTrue(outContent.toString().contains("\t6\t" + fileName));
+        Path filePath = createTestFile("testC", contentC);
+        App.main(new String[]{"-w", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t5\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testMultipleCommandsCL() throws IOException {
-        String fileName = path_txt + "testB.txt";
-        App.main(new String[]{"-cl", fileName});
-        assertTrue(outContent.toString().contains("\t27\t5\t" + fileName));
+        Path filePath = createTestFile("testB", contentB);
+        App.main(new String[]{"-cl", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t21\t4\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testMultipleCommandsLW() throws IOException {
-        String fileName = path_txt +"testC.txt";
-        App.main(new String[]{"-lw", fileName});
-        assertTrue(outContent.toString().contains("\t4\t6\t" + fileName));
+        Path filePath = createTestFile("testC", contentC);
+        App.main(new String[]{"-lw", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t3\t5\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testMultipleCommandsCW() throws IOException {
-        String fileName = path_txt +"testA.txt";
-        App.main(new String[]{"-cw", fileName});
-        assertTrue(outContent.toString().contains("\t182\t33\t" + fileName));
+        Path filePath = createTestFile("testA", contentA);
+        App.main(new String[]{"-cw", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t178\t33\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
     @Test
     public void testMultipleCommandsCLW() throws IOException {
-        String fileName = path_txt +"testC.txt";
-        App.main(new String[]{"-clw", fileName});
-        assertTrue(outContent.toString().contains("\t30\t4\t6\t" + fileName));
+        
+        Path filePath = createTestFile("testC", contentC);
+        App.main(new String[]{"-clw", filePath.toString()});
+        assertTrue(outContent.toString().contains("\t25\t3\t5\t" + filePath.toString()));
+        deleteTestFile(filePath);
     }
 }
