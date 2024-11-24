@@ -4,45 +4,63 @@ package es.upm.grise.profundizacion.wc;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 public class CounterTest {
-	private static final String EXAMPLE_FILE_PATH = Paths.get("example.txt").toString();
-    private BufferedReader br;
-    private Counter counter;
 
-    @BeforeEach
-    public void setUp() throws IOException {
-        br = new BufferedReader(new FileReader(EXAMPLE_FILE_PATH));
-        counter = new Counter(br);
+    private File tempFile;
+
+    File createTempFile(String content) throws IOException {
+        tempFile = File.createTempFile("testFile", ".txt");
+        FileWriter writer = new FileWriter(tempFile);
+        writer.write(content);
+        writer.close();
+        return tempFile;
     }
 
-    @Test
-    public void testNumberCharacters() throws IOException { // En windows al parecer son 2 caracteres para el salto de linea ¿?
-        assertEquals(37, counter.getNumberCharacters(), "Expected character count does not match.");
+    @AfterEach
+    public void tearDown() {
+        if (tempFile != null && tempFile.exists()) {
+            tempFile.delete();
+        }
     }
 
     @Test
     public void testNumberLines() throws IOException {
-        assertEquals(5, counter.getNumberLines(), "Expected line count does not match.");
+        String content = "With the first pick in the 2003 NBA Draft\nThe Cleveland Cavaliers select\nLeBron James\n"; // Add a trailing newline
+        int expLines = 3;
+        File file = createTempFile(content);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        Counter counter = new Counter(br);
+        assertEquals(expLines, counter.getNumberLines(), "Expected " + expLines + " lines");
     }
 
     @Test
-    public void testNumberWords() throws IOException {
-        assertEquals(6, counter.getNumberWords(), "Expected word count does not match.");
+    public void testWordCount() throws IOException {
+        String content = "Thunder trade Josh Giddey to Bulls in exchange for Alex Caruso";
+        int expWords = 10; // Count words manually
+        File file = createTempFile(content);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        Counter counter = new Counter(br);
+        assertEquals(expWords, counter.getNumberWords(), "Expected " + expWords + " words");
     }
 
-    @AfterEach
-    public void tearDown() throws IOException {
-        if (br != null) {
-            br.close(); // Close after each test
-        }
+    @Test
+    public void testNumberCharacters() throws IOException {
+        String content = "JDub";
+        int expChars = 4;
+        File file = createTempFile(content);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        Counter counter = new Counter(br);
+        assertEquals(expChars, counter.getNumberCharacters(), "Expected " + expChars + " characters");
     }
-    
 }
+
