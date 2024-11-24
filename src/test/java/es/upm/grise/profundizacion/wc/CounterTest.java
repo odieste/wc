@@ -18,7 +18,7 @@ public class CounterTest {
 
     private File tempFile;
 
-    File createTempFile(String content) throws IOException {
+    private File createTempFile(String content) throws IOException {
         tempFile = File.createTempFile("testFile", ".txt");
         FileWriter writer = new FileWriter(tempFile);
         writer.write(content);
