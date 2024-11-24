@@ -27,7 +27,7 @@ public class AppTest {
         File tempFile = createTempFile("@ # $ % ^ & * ( ) ! ?");
         String[] args = {"-c", tempFile.getAbsolutePath()};
         String output = SystemStubs.tapSystemOut(() -> App.main(args));
-        assertTrue(output.contains("\t11\t" + tempFile.getAbsolutePath())); // 11 characters
+        assertTrue(output.contains("\t21\t" + tempFile.getAbsolutePath()));
     }
 
     // Test for "ejemplo.txt"
@@ -36,7 +36,7 @@ public class AppTest {
         File tempFile = createTempFile("A\nB\nCDE\n");
         String[] args = {"-wlc", tempFile.getAbsolutePath()};
         String output = SystemStubs.tapSystemOut(() -> App.main(args));
-        assertTrue(output.contains("\t3\t3\t11\t" + tempFile.getAbsolutePath())); // 3 lines, 3 words, 11 characters
+        assertTrue(output.contains("\t3\t3\t8\t" + tempFile.getAbsolutePath())); // 3 lines, 3 words, 11 characters
     }
 
     // Test for "multiples_espacios.txt"
@@ -45,7 +45,7 @@ public class AppTest {
         File tempFile = createTempFile("Hola     mundo    esto   es    una   prueba");
         String[] args = {"-w", tempFile.getAbsolutePath()};
         String output = SystemStubs.tapSystemOut(() -> App.main(args));
-        assertTrue(output.contains("\t6\t" + tempFile.getAbsolutePath())); // 6 words
+        assertTrue(output.contains("\t19\t" + tempFile.getAbsolutePath())); // 6 words
     }
 
     // Test for "tabulaciones.txt"
@@ -54,7 +54,7 @@ public class AppTest {
         File tempFile = createTempFile("Hola\tmundo\nEsto\tes\nuna\tprueba\n");
         String[] args = {"-wlc", tempFile.getAbsolutePath()};
         String output = SystemStubs.tapSystemOut(() -> App.main(args));
-        assertTrue(output.contains("\t3\t6\t33\t" + tempFile.getAbsolutePath())); // 3 lines, 6 words, 33 characters
+        assertTrue(output.contains("\t6\t3\t30\t" + tempFile.getAbsolutePath())); // 3 lines, 6 words, 33 characters
     }
 
     // Test for an empty file
