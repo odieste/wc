@@ -1,11 +1,15 @@
 package es.upm.grise.profundizacion.wc;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class AppTest {
 
@@ -19,12 +23,22 @@ public class AppTest {
      */
     private final PrintStream originalOut = System.out;
 
+    File tempFile;
+
     /**
      * Redirige la salida del programa antes de cada test
+     * @throws IOException 
      */
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         System.setOut(new PrintStream(outputStream));
+
+        String text = "12\n34 56";
+        this.tempFile = File.createTempFile("tempFile",".txt");
+        tempFile.deleteOnExit();
+        try (FileWriter writer=new FileWriter(tempFile)) {
+            writer.write(text);
+        }
     }
 
     /**
@@ -81,7 +95,7 @@ public class AppTest {
      */
     @Test
     public void comandosSinGuión() {
-        String [] args = {"c", "./test_file/test.txt"};
+        String [] args = {"c", tempFile.getAbsolutePath()};
         App.main(args);
 
         String expectedOutput = "The commands do not start with -";
@@ -94,7 +108,7 @@ public class AppTest {
      */
     @Test
     public void comandosNoValidos() {
-        String [] args = {"-a", "./test_file/test.txt"};
+        String [] args = {"-a", tempFile.getAbsolutePath()};
         App.main(args);
 
         String expectedOutput = "Unrecognized command: " + args[0].charAt(1);
@@ -107,7 +121,7 @@ public class AppTest {
      */
     @Test
     public void contarCaracteres() {
-        String [] args = {"-c", "./test_file/test.txt"};
+        String [] args = {"-c", tempFile.getAbsolutePath()};
         App.main(args);
 
         String expectedOutput = "8" + "\t" + args[1];
@@ -120,7 +134,7 @@ public class AppTest {
      */
     @Test
     public void contarLineas() {
-        String [] args = {"-l", "./test_file/test.txt"};
+        String [] args = {"-l", tempFile.getAbsolutePath()};
         App.main(args);
 
         String expectedOutput = "1" + "\t" + args[1];
@@ -133,7 +147,7 @@ public class AppTest {
      */
     @Test
     public void contarPalabras() {
-        String [] args = {"-w", "./test_file/test.txt"};
+        String [] args = {"-w", tempFile.getAbsolutePath()};
         App.main(args);
 
         String expectedOutput = "2" + "\t" + args[1];
@@ -147,7 +161,7 @@ public class AppTest {
      */
     @Test
     public void contarTodo() {
-        String [] args = {"-clw", "./test_file/test.txt"};
+        String [] args = {"-clw", tempFile.getAbsolutePath()};
         App.main(args);
 
         String expectedOutput ="8" +"\t" + "1" +"\t" + "2" + "\t" + args[1];
