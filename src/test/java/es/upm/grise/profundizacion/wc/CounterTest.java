@@ -1,3 +1,5 @@
+package es.upm.grise.profundizacion.wc;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.upm.grise.profundizacion.wc.Counter;

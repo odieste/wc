@@ -14,11 +14,7 @@ public class Counter {
 	    int character = br.read();
 
 	    while (character != -1) {
-	    	// One more character
 	    	numberCharacters++;
-	    	
-	    	// Check if a separator has been found, which means a word
-	    	// has been detected
 	    	if(character == ' ' || character == '\t' || character == '\n') {
 	    		numberWords++;
 	    	}
