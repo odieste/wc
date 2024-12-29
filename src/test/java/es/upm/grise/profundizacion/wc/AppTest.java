@@ -5,11 +5,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class AppTest {
+
+    private static Path testFile = Paths.get("ejemplo.txt");
+
+    @BeforeAll
+    public static void setup() throws IOException {
+        Files.writeString(testFile, "kjdbvws wonvwofjw\n sdnfwijf ooj    kjndfohwouer 21374 vehf\n jgfosj\n\nskfjwoief ewjf\n\n\ndkfgwoihgpw vs wepfjwfin");
+    }
+
+    @AfterAll
+    public static void teardown() {
+        try {
+            Files.deleteIfExists(testFile);
+        } catch (IOException e) {
+            System.err.println("Error deleting test file: " + e.getMessage());
+            try {
+                Thread.sleep(100);
+                Files.deleteIfExists(testFile);
+            } catch (IOException | InterruptedException ex) {
+                System.err.println("Failed to delete test file on retry: " + ex.getMessage());
+            }
+        }
+    }
+
 
     @Test
     public void testUsageMessageWhenNoArgs() {
@@ -33,9 +62,16 @@ public class AppTest {
     @Test
     public void testStartWithHyphen() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(output));
+        PrintStream printStream = new PrintStream(output);
+        System.setOut(printStream);
         
-        App.main(new String[] {"c", "ejemplo.txt"});
+        try {
+            App.main(new String[] {"c", testFile.toString()});
+        }
+        finally {
+            printStream.close();
+        }
+        
         
         assertTrue(output.toString().contains("The commands do not start with -"));
     }
@@ -43,20 +79,32 @@ public class AppTest {
     @Test
     public void testCountLinesAndChars() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(output));
+        PrintStream printStream = new PrintStream(output);
+        System.setOut(printStream);
 
-        App.main(new String[] {"-lc", "ejemplo.txt"});
+        try {
+            App.main(new String[] {"-lc", testFile.toString()});
+        }
+        finally {
+            printStream.close();
+        }
         
-        assertEquals("\t7\t116\tejemplo.txt\n".trim(), output.toString().trim());
+        assertEquals(("\t7\t109\t" + testFile.getFileName().toString() + "\n").trim(), output.toString().trim());
     }
 
     @Test
     public void testCountWords() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(output));
+        PrintStream printStream = new PrintStream(output);
+        System.setOut(printStream);
 
-        App.main(new String[] {"-w", "ejemplo.txt"});
+        try {
+            App.main(new String[] {"-w", testFile.toString()});
+        }
+        finally {
+            printStream.close();
+        }
         
-        assertEquals("\t20\tejemplo.txt\n".trim(), output.toString().trim());
+        assertEquals(("\t20\t" + testFile.getFileName().toString() + "\n").trim(), output.toString().trim());
     }
 }
